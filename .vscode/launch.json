@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MainCliente",
+            "request": "launch",
+            "mainClass": "sockets.MainCliente",
+            "projectName": "REDES20192-Lab1_d149ab53"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MainServidor",
+            "request": "launch",
+            "mainClass": "sockets.MainServidor",
+            "projectName": "REDES20192-Lab1_d149ab53"
+        }
+    ]
+}
