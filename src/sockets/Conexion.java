@@ -1,25 +1,19 @@
 package sockets;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-//Esta clase solo almacena datos como el host, puerto y el flujo de datos
+//Esta clase solo realiza las conexiones
 public class Conexion{
-    private final int PUERTO = 3000;
-    private final String HOST = "localhost";
-    protected String mensajeServidor;
-    protected ServerSocket servidorSocket; //Socket para el servidor
-    protected Socket clienteSocket; //Socket para el cliente
-    protected DataOutputStream salidaServidor, salidaCliente; //Flujo de datos
+    protected ServerSocket servidor; //Socket para el servidor
+    protected Socket socket; //Socket para el cliente
 
-    public Conexion(String tipo) throws IOException{
-        if(tipo.equalsIgnoreCase("servidor")){
-            servidorSocket = new ServerSocket(PUERTO);
-            clienteSocket = new Socket();
-        } else {
-            clienteSocket = new Socket (HOST, PUERTO);
-        }
+    public Conexion(int puerto) throws IOException{
+        servidor = new ServerSocket(puerto);
+    }
+
+    public Conexion(int puerto, String host) throws IOException{
+        socket = new Socket(host, puerto);
     }
 }
