@@ -2,6 +2,10 @@ import java.io.*;
 
 public class MensajeChat implements Serializable {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	// "Usuarios" recibe la lista de los usuarios conectados
 	// "Mensaje" será un mensaje de texto
 	// "Desconectar" para salir del chat
