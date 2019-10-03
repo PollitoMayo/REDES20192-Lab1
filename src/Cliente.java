@@ -1,6 +1,6 @@
 import java.net.*;
+import java.util.Scanner;
 import java.io.*;
-import java.util.*;
 
 public class Cliente {
 	// Entradas/Salidas
@@ -8,53 +8,60 @@ public class Cliente {
 	private ObjectOutputStream sSalida; // Escribe en el socket
 	private Socket socket;
 
-	private String servidor, nombreUsuario;
-	private int puerto;
+	private String direccionServidor, nombreUsuario, mensaje, respuesta;
+	private int numeroPuerto;
+	private Scanner scaner;
+	private Boolean bool;
+
+	// Constructor
+	Cliente(String servidor, int puerto, String usuario) {
+		this.direccionServidor = servidor;
+		this.numeroPuerto = puerto;
+		this.nombreUsuario = usuario;
+	}
 
 	public String getNombreUsuario() {
 		return nombreUsuario;
 	}
 
-	public void setNombreUsuario(String nombreUsuario) {
-		this.nombreUsuario = nombreUsuario;
+	public void setNombreUsuario(String usuario) {
+		this.nombreUsuario = usuario;
 	}
 
-	// Constructor
-	Cliente(String servidor, int puerto, String nombreUsuario) {
-		this.servidor = servidor;
-		this.puerto = puerto;
-		this.nombreUsuario = nombreUsuario;
-	}
-
-	// "start" comienza el chat
+	// Comienza el chat y retorna si es que hubo algún problema
 	public boolean start() {
 		try {
-			socket = new socket(servidor, puerto);
+			socket = new Socket(direccionServidor, numeroPuerto);
 		}
 		// Si falla la conexión
 		catch (Exception ec) {
-			mostrar("Error conectando con el servidor");
+			mensaje = "Error conectando con el servidor";
+			mostrar(mensaje, 2);
 			return false;
 		}
 
 		String mensaje = "Conexión aceptada " + socket.getInetAddress() + ":" + socket.getPort();
-		mostrar(mensaje);
+		mostrar(mensaje, 1);
 
 		// Creando ambos Data Stream
 		try {
 			sEntrada = new ObjectInputStream(socket.getInputStream());
 			sSalida = new ObjectOutputStream(socket.getOutputStream());
+			//#
+			System.out.println("Se crean los streams");
 		} catch (IOException eIO) {
-			mostrar("Hubo una excepción al crear los Streams");
+			mensaje = "Hubo una excepción al crear los Streams";
+			mostrar(mensaje, 2);
 			return false;
 		}
 
 		// Se crea un hilo para escuchar desde el servidor
-		new Escuchar().run();
+		new Escuchar().start();
 		try {
 			sSalida.writeObject(nombreUsuario);
 		} catch (IOException eIO) {
-			mostrar("Excepción al loggear");
+			mensaje = "Excepción al loggear";
+			mostrar(mensaje, 2);
 			desconectar();
 			return false;
 		}
@@ -62,8 +69,19 @@ public class Cliente {
 	}
 
 	// Mostrar un mensaje en la consola
-	private void mostrar(String mensaje) {
-		System.out.println(mensaje);
+	private void mostrar(String mensaje, int tipo) {
+		//Tipo 0: Mensaje
+		//Tipo 1: Conexión aceptada
+		//Tipo 2: Error
+		if(tipo == 0){
+			System.out.println(mensaje);
+		}
+		if(tipo == 1){
+			System.out.println(mensaje);
+		}
+		if(tipo == 2){
+			System.out.println(mensaje);
+		}
 	}
 
 	// Enviar un mensaje al servidor
@@ -71,12 +89,13 @@ public class Cliente {
 		try {
 			sSalida.writeObject(mensaje);
 		} catch (IOException e) {
-			mostrar("Hubo un error al escribir en el servidor");
+			this.mensaje = "Hubo un error al escribir en el servidor";
+			mostrar(this.mensaje, 2);
 		}
 	}
 
 	// Si algo sale mal se cierran las entradas, salidas y se desconecta
-	private void desconectar() {
+	public void desconectar() {
 		try {
 			if (sEntrada != null)
 				sEntrada.close();
@@ -89,5 +108,21 @@ public class Cliente {
 			if (socket != null)
 				socket.close();
 		} catch (Exception e) {}
+	}
+
+	class Escuchar extends Thread {
+		public void run() {
+			String mensaje;
+			while (true) {
+				try {
+					mensaje = (String) sEntrada.readObject();
+					mostrar(mensaje, 1);
+				} catch (IOException e) {
+					mensaje = "Se ha caído el servidor";
+					mostrar(mensaje, 2);
+				} catch (ClassNotFoundException e2) {
+				}
+			}
+		}
 	}
 }

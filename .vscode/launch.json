@@ -2,24 +2,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - Servidor",
+            "name": "CodeLens (Launch) - App",
             "request": "launch",
-            "mainClass": "chat.Servidor",
-            "projectName": "REDES20192-Lab1_d149ab53"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - Servidor",
-            "request": "launch",
-            "mainClass": "Servidor",
-            "projectName": "REDES20192-Lab1_d149ab53"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - Cliente",
-            "request": "launch",
-            "mainClass": "Cliente",
-            "projectName": "REDES20192-Lab1_d149ab53"
+            "mainClass": "src.app.App",
+            "projectName": "REDES20192-Labb1"
         }
     ]
 }
