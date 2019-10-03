@@ -1,4 +1,5 @@
 import java.util.*;
+import java.net.InetAddress;
 
 public class MainServidor {
     public static void main(String[] args) {
@@ -14,11 +15,16 @@ public class MainServidor {
         } else {
             puerto = 8000; //Puerto por defecto
         }
-        
-        System.out.println("\n\tCreando el servidor\n");
-        Servidor servidor = new Servidor(puerto);
-        
-        System.out.println("\n\tEsperando por clientes...\n");
-		servidor.start();
+        try {
+            System.out.println("\n\tCreando el servidor\n");
+            Servidor servidor = new Servidor(puerto);
+            System.out.println("\tIniciado en: " + InetAddress.getLocalHost().getHostAddress() + ":" + puerto);
+
+            System.out.println("\n\tEsperando por clientes...\n");
+		    servidor.start();
+        }
+        catch(Exception e) {
+
+        }
 	}
 }
